@@ -1,0 +1,2241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Kisan Sahayk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1b5e20;
+            --primary-light: #2e7d32;
+            --accent: #ff6f00;
+            --blue: #1565c0;
+            --red: #c62828;
+            --red-light: #ef5350;
+            --green: #2e7d32;
+            --green-bg: #e8f5e9;
+            --orange-bg: #fff3e0;
+            --blue-bg: #e3f2fd;
+            --red-bg: #ffebee;
+            --bg: #f0f4f0;
+            --sidebar: #1a2e1a;
+            --sidebar-hover: #2e4a2e;
+            --card-bg: #ffffff;
+            --text-main: #1a202c;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.14);
+            --transition: all 0.25s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ── LOGIN SCREEN ── */
+        #loginScreen {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 40%, #e65100 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo .icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-logo h2 {
+            font-size: 1.6rem;
+            color: var(--primary);
+        }
+
+        .login-logo p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .login-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #fff3e0;
+            color: var(--accent);
+            border: 1px solid #ffcc80;
+            border-radius: 50px;
+            padding: 0.3rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .field {
+            margin-bottom: 1.25rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--text-main);
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .input-wrap input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+        }
+
+        .toggle-pass {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .login-error {
+            background: #ffebee;
+            border: 1px solid #ef9a9a;
+            color: var(--red);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #1b5e20, #4caf50);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-login:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .back-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── ADMIN LAYOUT ── */
+        #adminLayout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: var(--sidebar);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            color: #a5d6a7;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-brand p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.78rem;
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .nav-item:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .nav-section-label {
+            padding: 1rem 1.5rem 0.3rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .admin-info p {
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .admin-info span {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 0.6rem;
+            background: rgba(198, 40, 40, 0.2);
+            border: 1px solid rgba(198, 40, 40, 0.3);
+            color: #ef9a9a;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-logout:hover {
+            background: var(--red);
+            color: white;
+        }
+
+        /* Main content */
+        .admin-main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .admin-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .admin-topbar h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .topbar-date {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Panels */
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            border-left: 4px solid transparent;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .stat-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stat-info h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+        }
+
+        .sc-green {
+            border-color: var(--green);
+        }
+
+        .sc-green .stat-icon {
+            background: var(--green-bg);
+        }
+
+        .sc-green .stat-info h3 {
+            color: var(--green);
+        }
+
+        .sc-orange {
+            border-color: var(--accent);
+        }
+
+        .sc-orange .stat-icon {
+            background: var(--orange-bg);
+        }
+
+        .sc-orange .stat-info h3 {
+            color: var(--accent);
+        }
+
+        .sc-blue {
+            border-color: var(--blue);
+        }
+
+        .sc-blue .stat-icon {
+            background: var(--blue-bg);
+        }
+
+        .sc-blue .stat-info h3 {
+            color: var(--blue);
+        }
+
+        .sc-red {
+            border-color: var(--red);
+        }
+
+        .sc-red .stat-icon {
+            background: var(--red-bg);
+        }
+
+        .sc-red .stat-info h3 {
+            color: var(--red);
+        }
+
+        /* Section Card */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .section-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-card-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .section-card-body {
+            padding: 1.5rem;
+        }
+
+        /* Table */
+        .admin-table-wrap {
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .admin-table th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            background: #f8fafc;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .admin-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .admin-table tr:hover td {
+            background: #f9fbf9;
+        }
+
+        .crop-tag {
+            display: inline-block;
+            padding: 0.2rem 0.65rem;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .tag-Rice {
+            background: #fff3cd;
+            color: #7d5a00;
+        }
+
+        .tag-Paddy {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .tag-Wheat {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .tag-Daal {
+            background: #fce4ec;
+            color: #880e4f;
+        }
+
+        /* Action Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.7rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary);
+        }
+
+        .btn-danger {
+            background: var(--red-bg);
+            color: var(--red);
+            border: 1px solid #ef9a9a;
+        }
+
+        .btn-danger:hover {
+            background: var(--red);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--orange-bg);
+            color: var(--accent);
+            border: 1px solid #ffcc80;
+        }
+
+        .btn-warning:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--blue-bg);
+            color: var(--blue);
+            border: 1px solid #90caf9;
+        }
+
+        .btn-info:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        /* Inline search/filter bar */
+        .table-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tbl-search {
+            position: relative;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .tbl-search input {
+            width: 100%;
+            padding: 0.6rem 0.9rem 0.6rem 2.4rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .tbl-search input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+        }
+
+        .tbl-search i {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .tbl-select {
+            padding: 0.6rem 0.9rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: white;
+            cursor: pointer;
+        }
+
+        .tbl-select:focus {
+            outline: none;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 1rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--red);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Form inside modal */
+        .mfield {
+            margin-bottom: 1.25rem;
+        }
+
+        .mfield label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .mfield input,
+        .mfield select,
+        .mfield textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .mfield input:focus,
+        .mfield select:focus,
+        .mfield textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+        }
+
+        .mfield textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .mrow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Price editing table */
+        .price-edit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .price-edit-table th {
+            padding: 0.65rem 0.9rem;
+            background: #f8fafc;
+            border-bottom: 2px solid var(--border);
+            text-align: left;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .price-edit-table td {
+            padding: 0.65rem 0.9rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .price-edit-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .price-edit-table input[type="number"] {
+            width: 90px;
+            padding: 0.35rem 0.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .price-edit-table input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-light);
+        }
+
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1b5e20;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9999;
+            max-width: 320px;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        #toast.error {
+            background: var(--red);
+        }
+
+        /* Empty state */
+        .empty-row td {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .empty-row td i {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            opacity: 0.4;
+        }
+
+        /* Responsive */
+        @media(max-width:768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                min-height: auto;
+            }
+
+            .admin-main {
+                margin-left: 0;
+            }
+
+            #adminLayout {
+                flex-direction: column;
+            }
+
+            .mrow {
+                grid-template-columns: 1fr;
+            }
+
+            #panel-sales>div[style] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* ── SALES SUMMARY STYLES ── */
+        .sc-teal {
+            border-color: #00897b;
+        }
+
+        .sc-teal .stat-icon {
+            background: #e0f2f1;
+        }
+
+        .sc-teal .stat-info h3 {
+            color: #00897b;
+        }
+
+        .sc-purple {
+            border-color: #6a1b9a;
+        }
+
+        .sc-purple .stat-icon {
+            background: #f3e5f5;
+        }
+
+        .sc-purple .stat-info h3 {
+            color: #6a1b9a;
+        }
+
+        /* Bar chart */
+        .bar-chart-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            padding: 0.5rem 0;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .bar-label {
+            width: 80px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            flex-shrink: 0;
+        }
+
+        .bar-track {
+            flex: 1;
+            background: #f1f5f9;
+            border-radius: 50px;
+            height: 28px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            padding-left: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 40px;
+        }
+
+        .bar-count {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            width: 32px;
+            text-align: right;
+        }
+
+        .bf-rice {
+            background: linear-gradient(90deg, #f57f17, #ffd54f);
+        }
+
+        .bf-paddy {
+            background: linear-gradient(90deg, #2e7d32, #66bb6a);
+        }
+
+        .bf-wheat {
+            background: linear-gradient(90deg, #e65100, #ff9800);
+        }
+
+        .bf-daal {
+            background: linear-gradient(90deg, #880e4f, #e91e63);
+        }
+
+        /* Revenue highlight */
+        .rev-big {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--green);
+        }
+
+        .pct-bar {
+            display: inline-block;
+            width: 60px;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            vertical-align: middle;
+            margin-left: 6px;
+            overflow: hidden;
+        }
+
+        .pct-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .pf-rice {
+            background: #f57f17;
+        }
+
+        .pf-paddy {
+            background: #2e7d32;
+        }
+
+        .pf-wheat {
+            background: #e65100;
+        }
+
+        .pf-daal {
+            background: #880e4f;
+        }
+
+        /* Rank medal colors */
+        .rank-1 {
+            color: #f9a825;
+            font-weight: 800;
+        }
+
+        .rank-2 {
+            color: #9e9e9e;
+            font-weight: 700;
+        }
+
+        .rank-3 {
+            color: #8d6e63;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══════════════════ LOGIN SCREEN ══════════════════ -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo">
+                <div class="icon"><img src="kisan_sahayk_logo.png" alt="Kisan Sahayk"
+                        style="width:64px;height:64px;object-fit:contain;"></div>
+                <h2>Kisan Sahayk</h2>
+                <p style="margin-bottom:1rem;">Admin Control Panel</p>
+                <div class="login-badge"><i class="fa-solid fa-shield-halved"></i> Restricted Access Only</div>
+            </div>
+            <form id="loginForm">
+                <div class="field">
+                    <label>Admin ID</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-id-badge"></i>
+                        <input type="text" id="loginId" placeholder="Enter Admin ID" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="loginPass" placeholder="Enter Password" required autocomplete="off">
+                        <button type="button" class="toggle-pass" id="togglePass"><i
+                                class="fa-regular fa-eye"></i></button>
+                    </div>
+                </div>
+                <div class="login-error hidden" id="loginError">
+                    <i class="fa-solid fa-circle-exclamation"></i> <span>Invalid ID or Password. Please try
+                        again.</span>
+                </div>
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login to Admin Panel
+                </button>
+            </form>
+            <p class="back-link"><a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to Main Site</a></p>
+        </div>
+    </div>
+
+    <!-- ══════════════════ ADMIN LAYOUT ══════════════════ -->
+    <div id="adminLayout" class="hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h2><img src="kisan_sahayk_logo.png" alt="" style="height:28px;vertical-align:middle;margin-right:6px;">
+                    KISAN SAHAYK</h2>
+                <p>Admin Panel</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Overview</div>
+                <button class="nav-item active" data-panel="dashboard">
+                    <i class="fa-solid fa-gauge-high"></i> Dashboard
+                </button>
+
+                <div class="nav-section-label">Listings</div>
+                <button class="nav-item" data-panel="listings">
+                    <i class="fa-solid fa-list"></i> Manage Listings
+                </button>
+                <button class="nav-item" data-panel="addListing">
+                    <i class="fa-solid fa-plus-circle"></i> Add New Listing
+                </button>
+
+                <div class="nav-section-label">Analytics</div>
+                <button class="nav-item" data-panel="sales">
+                    <i class="fa-solid fa-chart-pie"></i> Sales Summary
+                </button>
+
+                <div class="nav-section-label">Market</div>
+                <button class="nav-item" data-panel="prices">
+                    <i class="fa-solid fa-chart-line"></i> Manage Prices
+                </button>
+
+                <div class="nav-section-label super-only hidden">System Admin</div>
+                <button class="nav-item super-only hidden" data-panel="admins">
+                    <i class="fa-solid fa-users-gear"></i> Manage Admins
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <div class="admin-info">
+                        <p>Administrator</p>
+                        <span>ID: 9098197054</span>
+                    </div>
+                </div>
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Area -->
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <h2 id="panelTitle">Dashboard</h2>
+                <span class="topbar-date" id="topbarDate"></span>
+            </div>
+
+            <!-- ── DASHBOARD PANEL ── -->
+            <div class="admin-panel active" id="panel-dashboard">
+                <div class="stats-grid" id="statsGrid"></div>
+
+                <div class="section-card">
+                    <div class="section-card-header">
+                        <h3><i class="fa-solid fa-clock-rotate-left"
+                                style="color:var(--green);margin-right:.5rem;"></i>Recent Listings</h3>
+                        <button class="btn btn-sm btn-primary" onclick="Admin.switchPanel('listings')">View All</button>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Crop</th>
+                                    <th>Farmer</th>
+                                    <th>Price / Qtl</th>
+                                    <th>Location</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashRecentBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── SALES SUMMARY PANEL ── -->
+            <div class="admin-panel" id="panel-sales">
+
+                <!-- Top stat bar -->
+                <div class="stats-grid" id="salesStatsGrid"></div>
+
+                <!-- Crop breakdown table + bar chart -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+
+                    <!-- Breakdown Table -->
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <h3><i class="fa-solid fa-table-columns"
+                                    style="color:var(--green);margin-right:.5rem;"></i>Crop-wise Breakdown</h3>
+                        </div>
+                        <div class="admin-table-wrap">
+                            <table class="admin-table" id="cropBreakdownTable">
+                                <thead>
+                                    <tr>
+                                        <th>Crop</th>
+                                        <th>Listings</th>
+                                        <th>Share %</th>
+                                        <th>Est. Revenue</th>
+                                        <th>Avg Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cropBreakdownBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Bar Chart -->
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <h3><i class="fa-solid fa-chart-bar"
+                                    style="color:var(--accent);margin-right:.5rem;"></i>Listings by Crop</h3>
+                        </div>
+                        <div class="section-card-body">
+                            <div class="bar-chart-wrap" id="barChartWrap"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top farmers + Monthly trend rows -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+
+                    <!-- Top Farmers -->
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <h3><i class="fa-solid fa-trophy" style="color:#f9a825;margin-right:.5rem;"></i>Top Farmers
+                                by Listings</h3>
+                        </div>
+                        <div class="admin-table-wrap">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Farmer</th>
+                                        <th>Listings</th>
+                                        <th>Est. Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topFarmersBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <h3><i class="fa-solid fa-bolt" style="color:var(--blue);margin-right:.5rem;"></i>Recent
+                                Activity (Last 7 Days)</h3>
+                        </div>
+                        <div class="admin-table-wrap">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Crop</th>
+                                        <th>Farmer</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentActivityBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── LISTINGS PANEL ── -->
+            <div class="admin-panel" id="panel-listings">
+                <div class="section-card">
+                    <div class="section-card-header">
+                        <h3><i class="fa-solid fa-list" style="color:var(--green);margin-right:.5rem;"></i>All Crop
+                            Listings</h3>
+                        <div class="table-toolbar">
+                            <div class="tbl-search"><i class="fa-solid fa-search"></i><input type="text"
+                                    id="listingSearch" placeholder="Search..."></div>
+                            <select class="tbl-select" id="listingFilter">
+                                <option value="all">All Crops</option>
+                                <option value="Rice">Rice</option>
+                                <option value="Paddy">Paddy</option>
+                                <option value="Wheat">Wheat</option>
+                                <option value="Daal">Daal</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary" onclick="Admin.switchPanel('addListing')"><i
+                                    class="fa-solid fa-plus"></i> Add</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Crop</th>
+                                    <th>Farmer</th>
+                                    <th>Phone</th>
+                                    <th>Qty</th>
+                                    <th>Price / Qtl</th>
+                                    <th>Location</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listingsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── ADD LISTING PANEL ── -->
+            <div class="admin-panel" id="panel-addListing">
+                <div class="section-card">
+                    <div class="section-card-header">
+                        <h3><i class="fa-solid fa-plus-circle" style="color:var(--green);margin-right:.5rem;"></i>Add
+                            New Crop Listing</h3>
+                    </div>
+                    <div class="section-card-body">
+                        <form id="adminAddForm">
+                            <div class="mrow">
+                                <div class="mfield">
+                                    <label>Farmer Name *</label>
+                                    <input type="text" id="ad_name" required placeholder="e.g. Ramesh Kumar">
+                                </div>
+                                <div class="mfield">
+                                    <label>Phone Number *</label>
+                                    <input type="tel" id="ad_phone" required placeholder="10-digit number"
+                                        pattern="[0-9]{10}">
+                                </div>
+                            </div>
+                            <div class="mrow">
+                                <div class="mfield">
+                                    <label>Crop Type *</label>
+                                    <select id="ad_crop" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Rice">🌾 Rice</option>
+                                        <option value="Paddy">🌿 Paddy / Dhan</option>
+                                        <option value="Wheat">🚜 Wheat / Gehu</option>
+                                        <option value="Daal">🫘 Pulses / Daal</option>
+                                    </select>
+                                </div>
+                                <div class="mfield">
+                                    <label>Quantity *</label>
+                                    <input type="text" id="ad_qty" required placeholder="e.g. 50 Quintals">
+                                </div>
+                            </div>
+                            <div class="mrow">
+                                <div class="mfield">
+                                    <label>Price per Quintal (₹) *</label>
+                                    <input type="number" id="ad_price" required placeholder="e.g. 2500" min="1">
+                                </div>
+                                <div class="mfield">
+                                    <label>City / Village *</label>
+                                    <input type="text" id="ad_city" required placeholder="e.g. Sangrur">
+                                </div>
+                            </div>
+                            <div class="mrow">
+                                <div class="mfield">
+                                    <label>State *</label>
+                                    <select id="ad_state" required>
+                                        <option value="" disabled selected>Select State</option>
+                                        <option>Andhra Pradesh</option>
+                                        <option>Arunachal Pradesh</option>
+                                        <option>Assam</option>
+                                        <option>Bihar</option>
+                                        <option>Chhattisgarh</option>
+                                        <option>Goa</option>
+                                        <option>Gujarat</option>
+                                        <option>Haryana</option>
+                                        <option>Himachal Pradesh</option>
+                                        <option>Jharkhand</option>
+                                        <option>Karnataka</option>
+                                        <option>Kerala</option>
+                                        <option>Madhya Pradesh</option>
+                                        <option>Maharashtra</option>
+                                        <option>Manipur</option>
+                                        <option>Meghalaya</option>
+                                        <option>Mizoram</option>
+                                        <option>Nagaland</option>
+                                        <option>Odisha</option>
+                                        <option>Punjab</option>
+                                        <option>Rajasthan</option>
+                                        <option>Sikkim</option>
+                                        <option>Tamil Nadu</option>
+                                        <option>Telangana</option>
+                                        <option>Tripura</option>
+                                        <option>Uttar Pradesh</option>
+                                        <option>Uttarakhand</option>
+                                        <option>West Bengal</option>
+                                        <option>Delhi</option>
+                                        <option>Jammu & Kashmir</option>
+                                        <option>Ladakh</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="mfield" style="display:flex;align-items:flex-end;">
+                                    <p style="font-size:.8rem;color:var(--text-muted);"><i
+                                            class="fa-solid fa-circle-info"></i> Shown to buyers as: <em>City,
+                                            State</em></p>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+                                <button type="submit" class="btn btn-primary"
+                                    style="padding:.9rem 2rem;font-size:1rem;">
+                                    <i class="fa-solid fa-plus-circle"></i> Add Listing
+                                </button>
+                                <button type="button" class="btn btn-warning"
+                                    onclick="document.getElementById('adminAddForm').reset()">
+                                    <i class="fa-solid fa-rotate-left"></i> Reset
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── PRICES PANEL ── -->
+            <div class="admin-panel" id="panel-prices">
+                <div class="section-card" style="margin-bottom:1.5rem;">
+                    <div class="section-card-header">
+                        <h3><i class="fa-solid fa-indian-rupee-sign"
+                                style="color:var(--accent);margin-right:.5rem;"></i>Manage Daily Market Prices</h3>
+                        <button class="btn btn-sm btn-primary" id="savePricesBtn"><i class="fa-solid fa-save"></i> Save
+                            All Changes</button>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="price-edit-table" id="priceEditTable">
+                            <thead>
+                                <tr>
+                                    <th>Crop</th>
+                                    <th>Variety / Type</th>
+                                    <th>State / Mandi</th>
+                                    <th>Min (₹)</th>
+                                    <th>Max (₹)</th>
+                                    <th>Avg (₹)</th>
+                                    <th>Change (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="priceEditBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <p style="color:var(--text-muted);font-size:0.85rem;"><i class="fa-solid fa-circle-info"></i> Changes
+                    saved here will reflect immediately on the main Market Prices page for all visitors.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Listing Modal -->
+    <div class="modal-overlay hidden" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-pen"></i> Edit Listing</h3>
+                <button class="modal-close" onclick="Admin.closeEditModal()"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit_id">
+                <div class="mrow">
+                    <div class="mfield">
+                        <label>Farmer Name</label>
+                        <input type="text" id="edit_name" required>
+                    </div>
+                    <div class="mfield">
+                        <label>Phone Number</label>
+                        <input type="tel" id="edit_phone" required>
+                    </div>
+                </div>
+                <div class="mrow">
+                    <div class="mfield">
+                        <label>Crop Type</label>
+                        <select id="edit_crop">
+                            <option value="Rice">🌾 Rice</option>
+                            <option value="Paddy">🌿 Paddy</option>
+                            <option value="Wheat">🚜 Wheat</option>
+                            <option value="Daal">🫘 Daal</option>
+                        </select>
+                    </div>
+                    <div class="mfield">
+                        <label>Quantity</label>
+                        <input type="text" id="edit_qty" required>
+                    </div>
+                </div>
+                <div class="mrow">
+                    <div class="mfield">
+                        <label>Price per Quintal (₹)</label>
+                        <input type="number" id="edit_price" required min="1">
+                    </div>
+                    <div class="mfield">
+                        <label>City / Village</label>
+                        <input type="text" id="edit_city" required placeholder="e.g. Sangrur">
+                    </div>
+                </div>
+                <div class="mrow">
+                    <div class="mfield">
+                        <label>State</label>
+                        <select id="edit_state" required>
+                            <option value="" disabled>Select State</option>
+                            <option>Andhra Pradesh</option>
+                            <option>Arunachal Pradesh</option>
+                            <option>Assam</option>
+                            <option>Bihar</option>
+                            <option>Chhattisgarh</option>
+                            <option>Goa</option>
+                            <option>Gujarat</option>
+                            <option>Haryana</option>
+                            <option>Himachal Pradesh</option>
+                            <option>Jharkhand</option>
+                            <option>Karnataka</option>
+                            <option>Kerala</option>
+                            <option>Madhya Pradesh</option>
+                            <option>Maharashtra</option>
+                            <option>Manipur</option>
+                            <option>Meghalaya</option>
+                            <option>Mizoram</option>
+                            <option>Nagaland</option>
+                            <option>Odisha</option>
+                            <option>Punjab</option>
+                            <option>Rajasthan</option>
+                            <option>Sikkim</option>
+                            <option>Tamil Nadu</option>
+                            <option>Telangana</option>
+                            <option>Tripura</option>
+                            <option>Uttar Pradesh</option>
+                            <option>Uttarakhand</option>
+                            <option>West Bengal</option>
+                            <option>Delhi</option>
+                            <option>Jammu & Kashmir</option>
+                            <option>Ladakh</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="mfield" style="display:flex;align-items:flex-end;">
+                        <p style="font-size:.8rem;color:var(--text-muted);"><i class="fa-solid fa-circle-info"></i>
+                            Location shown to buyers will be: <em>City, State</em></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" onclick="Admin.closeEditModal()"><i class="fa-solid fa-times"></i>
+                    Cancel</button>
+                <button class="btn btn-primary" onclick="Admin.saveEdit()"><i class="fa-solid fa-save"></i> Save
+                    Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirm Modal -->
+    <div class="modal-overlay hidden" id="deleteModal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <h3 style="color:var(--red);"><i class="fa-solid fa-triangle-exclamation"></i> Confirm Delete</h3>
+                <button class="modal-close" onclick="Admin.closeDeleteModal()"><i
+                        class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:1rem;color:var(--text-main);">Are you sure you want to <strong>permanently
+                        delete</strong> this listing?</p>
+                <p style="color:var(--text-muted);margin-top:.5rem;font-size:.9rem;">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" onclick="Admin.closeDeleteModal()"><i class="fa-solid fa-times"></i>
+                    Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn"><i class="fa-solid fa-trash"></i> Yes,
+                    Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"><i class="fa-solid fa-check-circle"></i><span id="toastMsg"></span></div>
+
+    <script>
+        // ──────────────────────────────────────────────
+        // CONSTANTS
+        // ──────────────────────────────────────────────
+        const MASTER_ADMINS = [
+            { id: '9098197054', pass: '9406323008' },
+            { id: 'Vinuu3', pass: 'Vinay369' }
+        ];
+        const STORAGE_KEY = 'kisan_market_crops_v2';
+        const PRICE_STORAGE_KEY = 'kisan_admin_prices_v1';
+
+        const DEFAULT_PRICES = [
+            { crop: 'Rice', emoji: '🌾', variety: 'Basmati', state: 'Punjab', min: 3000, max: 3500, avg: 3200, change: 50 },
+            { crop: 'Rice', emoji: '🌾', variety: 'Sona Masuri', state: 'Andhra Pradesh', min: 2800, max: 3100, avg: 2950, change: -20 },
+            { crop: 'Rice', emoji: '🌾', variety: 'IR-36', state: 'West Bengal', min: 2400, max: 2700, avg: 2550, change: 30 },
+            { crop: 'Paddy', emoji: '🌿', variety: 'Dhan (Raw)', state: 'Haryana', min: 1750, max: 2050, avg: 1900, change: -30 },
+            { crop: 'Paddy', emoji: '🌿', variety: 'Parboiled', state: 'UP', min: 1600, max: 1850, avg: 1720, change: 10 },
+            { crop: 'Paddy', emoji: '🌿', variety: 'Fine Paddy', state: 'Chhattisgarh', min: 1900, max: 2100, avg: 2000, change: 45 },
+            { crop: 'Wheat', emoji: '🚜', variety: 'Sharbati', state: 'MP', min: 2200, max: 2650, avg: 2400, change: 80 },
+            { crop: 'Wheat', emoji: '🚜', variety: 'Lokwan', state: 'Maharashtra', min: 2100, max: 2400, avg: 2250, change: 60 },
+            { crop: 'Wheat', emoji: '🚜', variety: 'HD-2967 (Gehu)', state: 'Punjab', min: 2300, max: 2600, avg: 2450, change: 90 },
+            { crop: 'Daal', emoji: '🫘', variety: 'Chana Dal', state: 'Rajasthan', min: 5500, max: 6200, avg: 5850, change: 150 },
+            { crop: 'Daal', emoji: '🫘', variety: 'Moong Dal', state: 'Gujarat', min: 7800, max: 9200, avg: 8500, change: 200 },
+            { crop: 'Daal', emoji: '🫘', variety: 'Arhar / Tur Dal', state: 'Maharashtra', min: 10000, max: 12000, avg: 11000, change: 350 },
+            { crop: 'Daal', emoji: '🫘', variety: 'Masoor Dal', state: 'UP', min: 5200, max: 5800, avg: 5500, change: 100 },
+        ];
+
+        // ──────────────────────────────────────────────
+        // STORAGE HELPERS
+        // ──────────────────────────────────────────────
+        const ADMINS_STORAGE_KEY = 'kisan_sub_admins_v1';
+
+        const DEFAULT_SUB_ADMINS = [
+            { id: 'Vrishabh', pass: 'Vrishabh' }
+        ];
+
+        function getSubAdmins() {
+            try {
+                let stored = JSON.parse(localStorage.getItem(ADMINS_STORAGE_KEY));
+                if (!Array.isArray(stored)) stored = [];
+                DEFAULT_SUB_ADMINS.forEach(def => {
+                    if (!stored.some(s => s.id === def.id)) stored.push(def);
+                });
+                return stored;
+            } catch {
+                return [...DEFAULT_SUB_ADMINS];
+            }
+        }
+        function saveSubAdmins(data) {
+            localStorage.setItem(ADMINS_STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function getListings() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
+        }
+        function saveListings(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+        function getPrices() {
+            try {
+                const stored = localStorage.getItem(PRICE_STORAGE_KEY);
+                return stored ? JSON.parse(stored) : [...DEFAULT_PRICES];
+            } catch { return [...DEFAULT_PRICES]; }
+        }
+        function savePrices(data) {
+            localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(data));
+            // Also update main app prices key if it uses one — main app reads from DEFAULT_PRICES array in memory,
+            // so we sync the shared key:
+            localStorage.setItem('kisan_market_prices', JSON.stringify(data));
+        }
+
+        // ──────────────────────────────────────────────
+        // TOAST
+        // ──────────────────────────────────────────────
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            t.className = isError ? 'error' : '';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // ──────────────────────────────────────────────
+        // ADMIN APP
+        // ──────────────────────────────────────────────
+        const Admin = {
+            pendingDeleteId: null,
+
+            // ── Login ─────────────────────────────────
+            login(id, pass) {
+                // 1. Check Super Admin
+                const masterAdmin = MASTER_ADMINS.find(admin => admin.id === id && admin.pass === pass);
+                if (masterAdmin) {
+                    this.doLogin('super', 'Master Admin', id);
+                    return;
+                }
+
+                // 2. Check Sub Admins
+                const subs = getSubAdmins();
+                const matchedSub = subs.find(s => s.id === id && s.pass === pass);
+                if (matchedSub) {
+                    this.doLogin('sub', matchedSub.id, matchedSub.id);
+                    return;
+                }
+
+                // Invalid login
+                document.getElementById('loginError').classList.remove('hidden');
+                document.getElementById('loginBtn').innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Login to Admin Panel';
+                document.getElementById('loginBtn').disabled = false;
+            },
+
+            doLogin(role, name, loggedInId) {
+                sessionStorage.setItem('kisan_admin_auth', '1');
+                sessionStorage.setItem('kisan_admin_role', role);
+                sessionStorage.setItem('kisan_admin_id', loggedInId || '');
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminLayout').classList.remove('hidden');
+                // Update Sidebar Name
+                document.querySelector('.admin-info p').textContent = name;
+                const idSpan = document.querySelector('.admin-info span');
+                if (idSpan && loggedInId) idSpan.textContent = `ID: ${loggedInId}`;
+                this.init();
+            },
+
+            logout() {
+                sessionStorage.removeItem('kisan_admin_auth');
+                sessionStorage.removeItem('kisan_admin_role');
+                document.getElementById('adminLayout').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('loginId').value = '';
+                document.getElementById('loginPass').value = '';
+            },
+
+            // ── Init ──────────────────────────────────
+            init() {
+                // Default to super if role is missing but auth is 1 (backwards compatibility for old sessions)
+                let role = sessionStorage.getItem('kisan_admin_role');
+                if (!role && sessionStorage.getItem('kisan_admin_auth') === '1') {
+                    role = 'super';
+                    sessionStorage.setItem('kisan_admin_role', 'super');
+                }
+
+                const isSuper = role === 'super';
+
+                // Toggle visibility based on Role
+                document.querySelectorAll('.super-only').forEach(el => {
+                    if (isSuper) {
+                        el.classList.remove('hidden');
+                        el.style.display = ''; // Reset display to let CSS handle it (e.g., flex)
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+
+                // Remove the sales summary nav if sub admin
+                const salesNav = document.querySelector('.nav-item[data-panel="sales"]');
+                if (salesNav) {
+                    if (isSuper) {
+                        salesNav.classList.remove('hidden');
+                        salesNav.style.display = '';
+                    } else {
+                        salesNav.classList.add('hidden');
+                        salesNav.style.display = 'none';
+                    }
+                }
+
+                // Set date
+                document.getElementById('topbarDate').textContent =
+                    new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+                this.renderDashboard();
+                this.renderListings();
+                this.renderPriceEditor();
+                if (isSuper) {
+                    this.renderAdmins();
+                }
+
+                // Nav (using event delegation to avoid rebinding)
+                document.querySelector('.sidebar-nav').addEventListener('click', e => {
+                    const btn = e.target.closest('.nav-item[data-panel]');
+                    if (btn) this.switchPanel(btn.dataset.panel);
+                });
+
+                // Add form
+                const addForm = document.getElementById('adminAddForm');
+                addForm.onsubmit = e => {
+                    e.preventDefault();
+                    this.addListing();
+                };
+
+                // Add sub admin form
+                const subAdminForm = document.getElementById('addSubAdminForm');
+                if (subAdminForm) {
+                    subAdminForm.onsubmit = e => {
+                        e.preventDefault();
+                        this.addSubAdmin();
+                    };
+                }
+
+                // Listing search/filter
+                document.getElementById('listingSearch').oninput = () => this.renderListings();
+                document.getElementById('listingFilter').onchange = () => this.renderListings();
+
+                // Save prices
+                document.getElementById('savePricesBtn').onclick = () => this.savePriceEdits();
+
+                // Delete confirm
+                document.getElementById('confirmDeleteBtn').onclick = () => {
+                    if (this.pendingDeleteId) this.doDelete(this.pendingDeleteId);
+                };
+            },
+
+            switchPanel(name) {
+                document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                document.getElementById(`panel-${name}`)?.classList.add('active');
+                document.querySelector(`.nav-item[data-panel="${name}"]`)?.classList.add('active');
+                const titles = { dashboard: 'Dashboard', listings: 'Manage Listings', addListing: 'Add New Listing', prices: 'Manage Market Prices', sales: 'Sales Summary', admins: 'Manage Admins' };
+                document.getElementById('panelTitle').textContent = titles[name] || name;
+                if (name === 'listings') this.renderListings();
+                if (name === 'dashboard') this.renderDashboard();
+                if (name === 'sales') this.renderSalesSummary();
+                if (name === 'admins') this.renderAdmins();
+            },
+
+            // ── System Admin Manager ─────────────────
+            renderAdmins() {
+                const subs = getSubAdmins();
+                const tbody = document.getElementById('adminTableBody');
+                if (!tbody) return;
+
+                let html = MASTER_ADMINS.map(admin => `
+                    <tr>
+                        <td><strong>${admin.id}</strong></td>
+                        <td>••••••••</td>
+                        <td><span style="background:var(--accent);color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:600;">Super Admin</span></td>
+                        <td style="text-align:right;"><span style="color:var(--text-muted);font-size:0.8rem;">Master</span></td>
+                    </tr>
+                `).join('');
+
+                subs.forEach((sub, i) => {
+                    html += `
+                    <tr>
+                        <td><strong>${sub.id}</strong></td>
+                        <td>${sub.pass}</td>
+                        <td><span style="background:#e2e8f0;color:var(--text-main);padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:600;">Sub Admin</span></td>
+                        <td style="text-align:right;">
+                            <button class="btn btn-sm btn-danger" onclick="Admin.deleteSubAdmin(${i})" title="Delete Sub Admin"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+            },
+
+            addSubAdmin() {
+                const idEl = document.getElementById('newAdminId');
+                const passEl = document.getElementById('newAdminPass');
+                const id = idEl.value.trim();
+                const pass = passEl.value.trim();
+
+                if (!id || !pass) return;
+
+                const subs = getSubAdmins();
+                if (MASTER_ADMINS.some(admin => admin.id === id) || subs.some(s => s.id === id)) {
+                    showToast('Admin ID already exists!', true);
+                    return;
+                }
+
+                subs.push({ id, pass });
+                saveSubAdmins(subs);
+                showToast('✅ Sub Admin created successfully!');
+
+                idEl.value = '';
+                passEl.value = '';
+                this.renderAdmins();
+            },
+
+            deleteSubAdmin(index) {
+                if (!confirm("Are you sure you want to remove this Sub Admin?")) return;
+                const subs = getSubAdmins();
+                subs.splice(index, 1);
+                saveSubAdmins(subs);
+                showToast('🗑️ Sub Admin removed.');
+                this.renderAdmins();
+            },
+
+            // ── Sales Summary ─────────────────────────
+            renderSalesSummary() {
+                const listings = getListings();
+                const total = listings.length;
+
+                // Estimate revenue as price * 1 quintal per listing (indicative)
+                const totalRev = listings.reduce((s, c) => s + (parseInt(c.price) || 0), 0);
+                const avgPrice = total ? Math.round(totalRev / total) : 0;
+                const uniqueFarmers = new Set(listings.map(c => c.phoneNumber)).size;
+
+                // Find top crop
+                const cropCounts = {};
+                listings.forEach(c => { cropCounts[c.cropType] = (cropCounts[c.cropType] || 0) + 1; });
+                const topCrop = Object.entries(cropCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '-';
+
+                // ─ Top stat cards ─
+                const emojiMap = { Rice: '🌾', Paddy: '🌿', Wheat: '🚜', Daal: '🫘' };
+                document.getElementById('salesStatsGrid').innerHTML = [
+                    { label: 'Total Listings', value: total, color: 'sc-green', icon: '📋' },
+                    { label: 'Est. Total Revenue', value: '₹' + totalRev.toLocaleString('en-IN'), color: 'sc-teal', icon: '💰' },
+                    { label: 'Unique Farmers', value: uniqueFarmers, color: 'sc-blue', icon: '👨‍🌾' },
+                    { label: 'Top Selling Crop', value: (emojiMap[topCrop] || '🌾') + ' ' + topCrop, color: 'sc-orange', icon: '🏆' },
+                ].map(s => `
+                    <div class="stat-card ${s.color}">
+                        <div class="stat-icon">${s.icon}</div>
+                        <div class="stat-info"><p>${s.label}</p><h3>${s.value}</h3></div>
+                    </div>`).join('');
+
+                // ─ Crop-wise breakdown ─
+                const CROP_KEYS = ['Rice', 'Paddy', 'Wheat', 'Daal'];
+                const pfMap = { Rice: 'pf-rice', Paddy: 'pf-paddy', Wheat: 'pf-wheat', Daal: 'pf-daal' };
+                const bfMap = { Rice: 'bf-rice', Paddy: 'bf-paddy', Wheat: 'bf-wheat', Daal: 'bf-daal' };
+
+                const breakdown = CROP_KEYS.map(crop => {
+                    const rows = listings.filter(c => c.cropType === crop);
+                    const count = rows.length;
+                    const rev = rows.reduce((s, c) => s + (parseInt(c.price) || 0), 0);
+                    const avg = count ? Math.round(rev / count) : 0;
+                    const pct = total ? Math.round((count / total) * 100) : 0;
+                    return { crop, count, rev, avg, pct };
+                });
+
+                document.getElementById('cropBreakdownBody').innerHTML = breakdown.map(b => `
+                    <tr>
+                        <td><span class="crop-tag tag-${b.crop}">${emojiMap[b.crop] || ''} ${b.crop}</span></td>
+                        <td style="font-weight:700;">${b.count}</td>
+                        <td>
+                            ${b.pct}%
+                            <span class="pct-bar"><span class="pct-fill ${pfMap[b.crop]}" style="width:${b.pct}%"></span></span>
+                        </td>
+                        <td class="rev-big">₹${b.rev.toLocaleString('en-IN')}</td>
+                        <td>₹${b.avg.toLocaleString('en-IN')}</td>
+                    </tr>`).join('');
+
+                // ─ Bar chart ─
+                const maxCount = Math.max(...breakdown.map(b => b.count), 1);
+                document.getElementById('barChartWrap').innerHTML = breakdown.map(b => `
+                    <div class="bar-row">
+                        <div class="bar-label">${emojiMap[b.crop] || ''} ${b.crop}</div>
+                        <div class="bar-track">
+                            <div class="bar-fill ${bfMap[b.crop]}" style="width:${(b.count / maxCount) * 100}%">${b.count}</div>
+                        </div>
+                        <div class="bar-count">${b.count}</div>
+                    </div>`).join('');
+
+                // ─ Top Farmers ─
+                const farmerMap = {};
+                listings.forEach(c => {
+                    if (!farmerMap[c.farmerName]) farmerMap[c.farmerName] = { name: c.farmerName, count: 0, rev: 0 };
+                    farmerMap[c.farmerName].count++;
+                    farmerMap[c.farmerName].rev += (parseInt(c.price) || 0);
+                });
+                const topFarmers = Object.values(farmerMap).sort((a, b) => b.count - a.count).slice(0, 8);
+                const rankClass = ['rank-1', 'rank-2', 'rank-3'];
+                document.getElementById('topFarmersBody').innerHTML = topFarmers.length ? topFarmers.map((f, i) => `
+                    <tr>
+                        <td class="${rankClass[i] || ''}">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</td>
+                        <td style="font-weight:600;">${f.name}</td>
+                        <td>${f.count}</td>
+                        <td class="rev-big">₹${f.rev.toLocaleString('en-IN')}</td>
+                    </tr>`).join('') :
+                    `<tr class="empty-row"><td colspan="4"><i class="fa-solid fa-users"></i> No farmer data</td></tr>`;
+
+                // ─ Recent Activity (last 7 days) ─
+                const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+                const recent7 = listings
+                    .filter(c => new Date(c.date).getTime() >= sevenDaysAgo)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 10);
+
+                document.getElementById('recentActivityBody').innerHTML = recent7.length ? recent7.map(c => `
+                    <tr>
+                        <td style="color:var(--text-muted);font-size:.8rem;">${new Date(c.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</td>
+                        <td><span class="crop-tag tag-${c.cropType}">${c.cropType}</span></td>
+                        <td style="font-weight:600;">${c.farmerName}</td>
+                        <td style="font-weight:700;color:var(--green);">₹${parseInt(c.price).toLocaleString('en-IN')}</td>
+                    </tr>`).join('') :
+                    `<tr class="empty-row"><td colspan="4"><i class="fa-solid fa-calendar"></i> No activity in last 7 days</td></tr>`;
+            },
+
+            // ── Dashboard ─────────────────────────────
+            renderDashboard() {
+                const listings = getListings();
+                const cropCounts = listings.reduce((acc, c) => { acc[c.cropType] = (acc[c.cropType] || 0) + 1; return acc; }, {});
+                const stats = [
+                    { label: 'Total Listings', value: listings.length, color: 'sc-green', icon: '🌾' },
+                    { label: 'Rice Listings', value: cropCounts['Rice'] || 0, color: 'sc-orange', icon: '🌾' },
+                    { label: 'Wheat Listings', value: cropCounts['Wheat'] || 0, color: 'sc-blue', icon: '🚜' },
+                    { label: 'Daal Listings', value: cropCounts['Daal'] || 0, color: 'sc-red', icon: '🫘' },
+                ];
+
+                document.getElementById('statsGrid').innerHTML = stats.map(s => `
+            <div class="stat-card ${s.color}">
+                <div class="stat-icon">${s.icon}</div>
+                <div class="stat-info"><p>${s.label}</p><h3>${s.value}</h3></div>
+            </div>
+        `).join('');
+
+                // Recent 5 listings
+                const recent = [...listings].slice(0, 5);
+                const tbody = document.getElementById('dashRecentBody');
+                if (!recent.length) {
+                    tbody.innerHTML = `<tr class="empty-row"><td colspan="5"><i class="fa-solid fa-box-open"></i>No listings yet</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = recent.map(c => `
+            <tr>
+                <td><span class="crop-tag tag-${c.cropType}">${c.cropType}</span></td>
+                <td>${c.farmerName}</td>
+                <td style="font-weight:700;">₹${parseInt(c.price).toLocaleString('en-IN')}</td>
+                <td>${c.location}</td>
+                <td>${new Date(c.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</td>
+            </tr>
+        `).join('');
+            },
+
+            // ── Listings ──────────────────────────────
+            renderListings() {
+                const search = (document.getElementById('listingSearch')?.value || '').toLowerCase();
+                const filter = document.getElementById('listingFilter')?.value || 'all';
+                let listings = getListings();
+
+                if (filter !== 'all') listings = listings.filter(c => c.cropType === filter);
+                if (search) listings = listings.filter(c =>
+                    [c.farmerName, c.cropType, c.location, c.phoneNumber]
+                        .some(v => v.toLowerCase().includes(search))
+                );
+
+                const tbody = document.getElementById('listingsBody');
+                if (!listings.length) {
+                    tbody.innerHTML = `<tr class="empty-row"><td colspan="9"><i class="fa-solid fa-box-open"></i>No listings found</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = listings.map((c, i) => `
+            <tr>
+                <td style="color:var(--text-muted);font-size:.8rem;">${i + 1}</td>
+                <td><span class="crop-tag tag-${c.cropType}">${c.cropType}</span></td>
+                <td style="font-weight:600;">${c.farmerName}</td>
+                <td>${c.phoneNumber}</td>
+                <td>${c.quantity}</td>
+                <td style="font-weight:700;color:var(--green);">₹${parseInt(c.price).toLocaleString('en-IN')}</td>
+                <td>${c.location}</td>
+                <td style="color:var(--text-muted);font-size:.8rem;">${new Date(c.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: '2-digit' })}</td>
+                <td>
+                    <div style="display:flex;gap:.4rem;">
+                        <button class="btn btn-sm btn-info" onclick="Admin.openEditModal('${c.id}')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="Admin.openDeleteModal('${c.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+            },
+
+            // ── Add Listing ────────────────────────────
+            addListing() {
+                const city = document.getElementById('ad_city').value.trim();
+                const state = document.getElementById('ad_state').value.trim();
+                const newCrop = {
+                    id: Date.now().toString(),
+                    farmerName: document.getElementById('ad_name').value.trim(),
+                    phoneNumber: document.getElementById('ad_phone').value.trim(),
+                    cropType: document.getElementById('ad_crop').value,
+                    quantity: document.getElementById('ad_qty').value.trim(),
+                    price: document.getElementById('ad_price').value,
+                    city, state,
+                    location: city && state ? `${city}, ${state}` : (city || state),
+                    date: new Date().toISOString(),
+                    photoUrl: ''
+                };
+                const listings = getListings();
+                listings.unshift(newCrop);
+                saveListings(listings);
+                document.getElementById('adminAddForm').reset();
+                showToast('✅ Listing added successfully!');
+                this.renderDashboard();
+                this.switchPanel('listings');
+            },
+
+            // ── Edit ──────────────────────────────────
+            openEditModal(id) {
+                const listings = getListings();
+                const crop = listings.find(c => c.id === id);
+                if (!crop) return;
+
+                // Split stored location into city + state for editing
+                const city = crop.city || (crop.location ? crop.location.split(',')[0]?.trim() : '');
+                const state = crop.state || (crop.location ? crop.location.split(',').slice(1).join(',').trim() : '');
+
+                document.getElementById('edit_id').value = id;
+                document.getElementById('edit_name').value = crop.farmerName;
+                document.getElementById('edit_phone').value = crop.phoneNumber;
+                document.getElementById('edit_crop').value = crop.cropType;
+                document.getElementById('edit_qty').value = crop.quantity;
+                document.getElementById('edit_price').value = crop.price;
+                document.getElementById('edit_city').value = city;
+                // Set state dropdown — add option if not in list
+                const stateEl = document.getElementById('edit_state');
+                const opt = [...stateEl.options].find(o => o.value === state);
+                if (opt) stateEl.value = state;
+                else if (state) {
+                    const extra = new Option(state, state, true, true);
+                    stateEl.add(extra);
+                }
+                document.getElementById('editModal').classList.remove('hidden');
+            },
+
+            closeEditModal() { document.getElementById('editModal').classList.add('hidden'); },
+
+            saveEdit() {
+                const id = document.getElementById('edit_id').value;
+                const listings = getListings();
+                const idx = listings.findIndex(c => c.id === id);
+                if (idx === -1) return;
+                const city = document.getElementById('edit_city').value.trim();
+                const state = document.getElementById('edit_state').value.trim();
+                listings[idx] = {
+                    ...listings[idx],
+                    farmerName: document.getElementById('edit_name').value.trim(),
+                    phoneNumber: document.getElementById('edit_phone').value.trim(),
+                    cropType: document.getElementById('edit_crop').value,
+                    quantity: document.getElementById('edit_qty').value.trim(),
+                    price: document.getElementById('edit_price').value,
+                    city, state,
+                    location: city && state ? `${city}, ${state}` : (city || state || listings[idx].location),
+                };
+                saveListings(listings);
+                this.closeEditModal();
+                this.renderListings();
+                this.renderDashboard();
+                showToast('✅ Listing updated!');
+            },
+
+            // ── Delete ────────────────────────────────
+            openDeleteModal(id) {
+                this.pendingDeleteId = id;
+                document.getElementById('deleteModal').classList.remove('hidden');
+            },
+
+            closeDeleteModal() {
+                this.pendingDeleteId = null;
+                document.getElementById('deleteModal').classList.add('hidden');
+            },
+
+            doDelete(id) {
+                let listings = getListings();
+                listings = listings.filter(c => c.id !== id);
+                saveListings(listings);
+                this.closeDeleteModal();
+                this.renderListings();
+                this.renderDashboard();
+                showToast('🗑️ Listing deleted.');
+            },
+
+            // ── Price Editor ──────────────────────────
+            renderPriceEditor() {
+                const prices = getPrices();
+                document.getElementById('priceEditBody').innerHTML = prices.map((p, i) => `
+            <tr>
+                <td>${p.emoji} <strong>${p.crop}</strong></td>
+                <td>${p.variety}</td>
+                <td>${p.state}</td>
+                <td><input type="number" value="${p.min}" data-idx="${i}" data-field="min" min="0"></td>
+                <td><input type="number" value="${p.max}" data-idx="${i}" data-field="max" min="0"></td>
+                <td><input type="number" value="${p.avg}" data-idx="${i}" data-field="avg" min="0"></td>
+                <td><input type="number" value="${p.change}" data-idx="${i}" data-field="change"></td>
+            </tr>
+        `).join('');
+            },
+
+            savePriceEdits() {
+                const prices = getPrices();
+                document.querySelectorAll('#priceEditBody input[data-idx]').forEach(input => {
+                    const idx = parseInt(input.dataset.idx);
+                    const field = input.dataset.field;
+                    prices[idx][field] = parseFloat(input.value) || 0;
+                });
+                savePrices(prices);
+                showToast('💾 Market prices saved & published!');
+            },
+        };
+
+        // ──────────────────────────────────────────────
+        // INIT
+        // ──────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check session
+            if (sessionStorage.getItem('kisan_admin_auth') === '1') {
+                // Backwards compatibility for role
+                if (!sessionStorage.getItem('kisan_admin_role')) {
+                    sessionStorage.setItem('kisan_admin_role', 'super');
+                    document.querySelector('.admin-info p').textContent = 'Master Admin';
+                }
+                const savedId = sessionStorage.getItem('kisan_admin_id');
+                if (savedId) {
+                    const idSpan = document.querySelector('.admin-info span');
+                    if (idSpan) idSpan.textContent = `ID: ${savedId}`;
+                }
+
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminLayout').classList.remove('hidden');
+                Admin.init();
+            }
+
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', e => {
+                e.preventDefault();
+                document.getElementById('loginError').classList.add('hidden');
+                const btn = document.getElementById('loginBtn');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+                btn.disabled = true;
+                setTimeout(() => {
+                    Admin.login(
+                        document.getElementById('loginId').value.trim(),
+                        document.getElementById('loginPass').value.trim()
+                    );
+                }, 800);
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => Admin.logout());
+
+            // Toggle password
+            document.getElementById('togglePass').addEventListener('click', () => {
+                const inp = document.getElementById('loginPass');
+                const icon = document.querySelector('#togglePass i');
+                if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-regular fa-eye-slash'; }
+                else { inp.type = 'password'; icon.className = 'fa-regular fa-eye'; }
+            });
+
+            // Close modals on overlay click
+            document.getElementById('editModal').addEventListener('click', e => {
+                if (e.target === document.getElementById('editModal')) Admin.closeEditModal();
+            });
+            document.getElementById('deleteModal').addEventListener('click', e => {
+                if (e.target === document.getElementById('deleteModal')) Admin.closeDeleteModal();
+            });
+        });
+    </script>
+</body>
+
+</html>

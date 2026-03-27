@@ -1,0 +1,48 @@
+// Seed / dummy listings shown on first load
+const now = Date.now();
+export const DUMMY_DATA = [
+  {
+    id: '1',
+    farmerName: 'Ramesh Singh',
+    phoneNumber: '9876543210',
+    cropType: 'Wheat',
+    quantity: '50 Quintals',
+    price: '2400',
+    location: 'Ludhiana, Punjab',
+    date: new Date(now).toISOString(),
+    photoUrl: '',
+  },
+  {
+    id: '2',
+    farmerName: 'Suresh Patil',
+    phoneNumber: '9123456780',
+    cropType: 'Rice',
+    quantity: '100 Quintals',
+    price: '3200',
+    location: 'Karnal, Haryana',
+    date: new Date(now - 86400000).toISOString(),
+    photoUrl: '',
+  },
+  {
+    id: '3',
+    farmerName: 'Amtul Khan',
+    phoneNumber: '8887776665',
+    cropType: 'Daal',
+    quantity: '20 Quintals',
+    price: '8500',
+    location: 'Indore, MP',
+    date: new Date(now - 172800000).toISOString(),
+    photoUrl: '',
+  },
+  {
+    id: '4',
+    farmerName: 'Gurpreet Kaur',
+    phoneNumber: '9988776655',
+    cropType: 'Paddy',
+    quantity: '75 Quintals',
+    price: '1850',
+    location: 'Patiala, Punjab',
+    date: new Date(now - 259200000).toISOString(),
+    photoUrl: '',
+  },
+];
