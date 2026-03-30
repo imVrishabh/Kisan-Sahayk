@@ -1,71 +1,256 @@
 /**
- * scripts/seed.js — one-time seed script.
+ * scripts/seed.js — Database seeding script
  *
- * Run with:   node scripts/seed.js          (from the backend/ directory)
- * Or:         npm run seed                   (from backend/)
- *
- * Seeds MarketPrice collection with default Mandi rates.
- * Seeds Crop collection with sample listings.
- * Skips seeding if data already exists (idempotent).
+ * Populates the database with sample data for development and testing.
+ * Run with: npm run seed
  */
-require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
+require('dotenv').config();
 const mongoose = require('mongoose');
+const connectDB = require('../config/db');
+
+const User = require('../models/User');
 const Crop = require('../models/Crop');
 const MarketPrice = require('../models/MarketPrice');
 
-// ── Seed data ───────────────────────────────────────────────────────────────
-const PRICE_SEEDS = [
-  { crop: 'Rice',  variety: 'IR-36 (Fine)',      state: 'Chhattisgarh', min: 2100, max: 2500, avg: 2350, change: 50,  emoji: '🌾' },
-  { crop: 'Rice',  variety: 'HMT (Medium)',       state: 'Chhattisgarh', min: 1950, max: 2200, avg: 2080, change: -30, emoji: '🌾' },
-  { crop: 'Rice',  variety: 'Sona Masuri',        state: 'Madhya Pradesh',min: 2200, max: 2600, avg: 2420, change: 80,  emoji: '🌾' },
-  { crop: 'Paddy', variety: 'MTU-7029',           state: 'Chhattisgarh', min: 1800, max: 2050, avg: 1950, change: 20,  emoji: '🌿' },
-  { crop: 'Paddy', variety: 'PR-106',             state: 'Madhya Pradesh',min: 1750, max: 1980, avg: 1870, change: -15, emoji: '🌿' },
-  { crop: 'Wheat', variety: 'Lok-1',              state: 'Madhya Pradesh',min: 2150, max: 2450, avg: 2300, change: 40,  emoji: '🚜' },
-  { crop: 'Wheat', variety: 'Sharbati',           state: 'Chhattisgarh', min: 2300, max: 2700, avg: 2520, change: 120, emoji: '🚜' },
-  { crop: 'Daal',  variety: 'Chana Dal',          state: 'Madhya Pradesh',min: 4200, max: 4800, avg: 4500, change: -50, emoji: '🫘' },
-  { crop: 'Daal',  variety: 'Arhar / Toor Dal',   state: 'Chhattisgarh', min: 5500, max: 6200, avg: 5800, change: 200, emoji: '🫘' },
-  { crop: 'Daal',  variety: 'Moong Dal',          state: 'Madhya Pradesh',min: 6000, max: 7000, avg: 6500, change: 100, emoji: '🫘' },
-];
+const seedData = async () => {
+    try {
+        await connectDB();
 
-const CROP_SEEDS = [
-  { farmerName: 'Ramesh Kumar',  phoneNumber: '9098197054', cropType: 'Rice',  quantity: '80 Quintal',  price: 2350, location: 'Durg, Chhattisgarh',      photoUrl: '' },
-  { farmerName: 'Sunita Yadav',  phoneNumber: '9770850156', cropType: 'Paddy', quantity: '50 Quintal',  price: 1950, location: 'Rajnandgaon, CG',          photoUrl: '' },
-  { farmerName: 'Mohan Sinha',   phoneNumber: '9340001122', cropType: 'Wheat', quantity: '120 Quintal', price: 2300, location: 'Raipur, Chhattisgarh',      photoUrl: '' },
-  { farmerName: 'Priya Patel',   phoneNumber: '8120334455', cropType: 'Daal',  quantity: '30 Quintal',  price: 4500, location: 'Bilaspur, Chhattisgarh',    photoUrl: '' },
-  { farmerName: 'Arjun Desai',   phoneNumber: '7987665544', cropType: 'Rice',  quantity: '200 Quintal', price: 2420, location: 'Jagdalpur, Chhattisgarh',   photoUrl: '' },
-  { farmerName: 'Kavita Verma',  phoneNumber: '9876554321', cropType: 'Wheat', quantity: '60 Quintal',  price: 2520, location: 'Bastar, Chhattisgarh',      photoUrl: '' },
-];
+        // Clear existing data
+        await User.deleteMany({});
+        await Crop.deleteMany({});
+        await MarketPrice.deleteMany({});
+        console.log('✅ Cleared existing data');
 
-async function seed() {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅  Connected to MongoDB for seeding…');
+        // ── Create Users ──────────────────────────────────────────────────────
+        const users = await User.create([
+            {
+                name: 'Raj Kumar',
+                email: 'raj@example.com',
+                password: 'password123',
+                phoneNumber: '9876543210',
+                role: 'farmer',
+                location: 'Punjab',
+                isVerified: true,
+            },
+            {
+                name: 'Priya Singh',
+                email: 'priya@example.com',
+                password: 'password123',
+                phoneNumber: '9876543211',
+                role: 'farmer',
+                location: 'Haryana',
+                isVerified: true,
+            },
+            {
+                name: 'Admin User',
+                email: 'admin@example.com',
+                password: 'admin123',
+                phoneNumber: '9876543212',
+                role: 'admin',
+                isVerified: true,
+            },
+        ]);
+        console.log('✅ Created users:', users.length);
 
-    // ── Market Prices ───────────────────────────────────────
-    const priceCount = await MarketPrice.countDocuments();
-    if (priceCount === 0) {
-      await MarketPrice.insertMany(PRICE_SEEDS);
-      console.log(`✅  Seeded ${PRICE_SEEDS.length} market price records`);
-    } else {
-      console.log(`ℹ️  Market prices already exist (${priceCount} records) — skipping`);
+        // ── Create Crops ──────────────────────────────────────────────────────
+        const crops = await Crop.create([
+            {
+                farmerId: users[0]._id,
+                farmerName: 'Raj Kumar',
+                phoneNumber: '9876543210',
+                cropType: 'Rice',
+                variety: 'Basmati',
+                quantity: '50 Quintal',
+                price: 2500,
+                location: 'Jalandhar',
+                district: 'Jalandhar',
+                state: 'Punjab',
+                description: 'Premium quality basmati rice, freshly harvested',
+                quality: 'premium',
+                harvestDate: new Date('2026-03-15'),
+                status: 'available',
+                isVerified: true,
+            },
+            {
+                farmerId: users[0]._id,
+                farmerName: 'Raj Kumar',
+                phoneNumber: '9876543210',
+                cropType: 'Wheat',
+                variety: 'HD-2967',
+                quantity: '30 Quintal',
+                price: 2200,
+                location: 'Jalandhar',
+                district: 'Jalandhar',
+                state: 'Punjab',
+                description: 'High yield wheat variety',
+                quality: 'standard',
+                harvestDate: new Date('2026-03-20'),
+                status: 'available',
+                isVerified: true,
+            },
+            {
+                farmerId: users[1]._id,
+                farmerName: 'Priya Singh',
+                phoneNumber: '9876543211',
+                cropType: 'Daal',
+                variety: 'Moong',
+                quantity: '25 Quintal',
+                price: 5500,
+                location: 'Faridabad',
+                district: 'Faridabad',
+                state: 'Haryana',
+                description: 'Organic moong dal',
+                quality: 'organic',
+                harvestDate: new Date('2026-02-28'),
+                status: 'available',
+                isVerified: true,
+            },
+            {
+                farmerId: users[1]._id,
+                farmerName: 'Priya Singh',
+                phoneNumber: '9876543211',
+                cropType: 'Paddy',
+                variety: 'PR-106',
+                quantity: '40 Quintal',
+                price: 2100,
+                location: 'Faridabad',
+                district: 'Faridabad',
+                state: 'Haryana',
+                description: 'Good quality paddy',
+                quality: 'standard',
+                harvestDate: new Date('2026-03-10'),
+                status: 'available',
+                isVerified: true,
+            },
+        ]);
+        console.log('✅ Created crops:', crops.length);
+
+        // ── Create Market Prices ─────────────────────────────────────────────
+        const prices = await MarketPrice.create([
+            {
+                crop: 'Rice',
+                variety: 'Basmati',
+                state: 'Punjab',
+                district: 'Jalandhar',
+                mandi: 'Jalandhar Mandi',
+                min: 2400,
+                max: 2600,
+                avg: 2500,
+                change: 50,
+                changePercent: 2.04,
+            },
+            {
+                crop: 'Rice',
+                variety: 'Basmati',
+                state: 'Haryana',
+                district: 'Hisar',
+                mandi: 'Hisar Mandi',
+                min: 2350,
+                max: 2550,
+                avg: 2450,
+                change: 30,
+                changePercent: 1.24,
+            },
+            {
+                crop: 'Wheat',
+                variety: 'HD-2967',
+                state: 'Punjab',
+                district: 'Ludhiana',
+                mandi: 'Ludhiana Mandi',
+                min: 2100,
+                max: 2300,
+                avg: 2200,
+                change: 0,
+                changePercent: 0,
+            },
+            {
+                crop: 'Wheat',
+                variety: 'HD-2967',
+                state: 'Haryana',
+                district: 'Karnal',
+                mandi: 'Karnal Mandi',
+                min: 2050,
+                max: 2250,
+                avg: 2150,
+                change: -50,
+                changePercent: -2.27,
+            },
+            {
+                crop: 'Daal',
+                variety: 'Moong',
+                state: 'Haryana',
+                district: 'Faridabad',
+                mandi: 'Faridabad Mandi',
+                min: 5300,
+                max: 5700,
+                avg: 5500,
+                change: 100,
+                changePercent: 1.85,
+            },
+            {
+                crop: 'Daal',
+                variety: 'Moong',
+                state: 'Maharashtra',
+                district: 'Nashik',
+                mandi: 'Nashik Mandi',
+                min: 5400,
+                max: 5800,
+                avg: 5600,
+                change: 60,
+                changePercent: 1.08,
+            },
+            {
+                crop: 'Paddy',
+                variety: 'PR-106',
+                state: 'Haryana',
+                district: 'Faridabad',
+                mandi: 'Faridabad Mandi',
+                min: 2000,
+                max: 2200,
+                avg: 2100,
+                change: 0,
+                changePercent: 0,
+            },
+            {
+                crop: 'Paddy',
+                variety: 'PR-106',
+                state: 'Punjab',
+                district: 'Patiala',
+                mandi: 'Patiala Mandi',
+                min: 1950,
+                max: 2150,
+                avg: 2050,
+                change: -30,
+                changePercent: -1.44,
+            },
+        ]);
+        console.log('✅ Created market prices:', prices.length);
+
+        console.log(`
+    ╔════════════════════════════════════════════════════╗
+    ║   ✅  Database seeding completed!                  ║
+    ║   Users: ${users.length}                                    ║
+    ║   Crops: ${crops.length}                                    ║
+    ║   Market Prices: ${prices.length}                           ║
+    ╚════════════════════════════════════════════════════╝
+    
+    📝 Sample Credentials:
+    
+    Farmer Account:
+    Email: raj@example.com
+    Password: password123
+    
+    Admin Account:
+    Email: admin@example.com
+    Password: admin123
+    `);
+
+        process.exit(0);
+    } catch (error) {
+        console.error('❌ Seeding failed:', error.message);
+        process.exit(1);
     }
+};
 
-    // ── Crop Listings ────────────────────────────────────────
-    const cropCount = await Crop.countDocuments();
-    if (cropCount === 0) {
-      await Crop.insertMany(CROP_SEEDS);
-      console.log(`✅  Seeded ${CROP_SEEDS.length} crop listings`);
-    } else {
-      console.log(`ℹ️  Crop listings already exist (${cropCount} records) — skipping`);
-    }
-
-    console.log('🎉  Seed complete — database is ready!');
-  } catch (err) {
-    console.error('❌  Seed error:', err.message);
-  } finally {
-    await mongoose.connection.close();
-    console.log('🔌  Connection closed');
-  }
-}
-
-seed();
+seedData();

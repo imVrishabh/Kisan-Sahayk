@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { LangProvider } from './context/LangContext';
+import { AuthProvider } from './context/AuthContext';
 import { CropsProvider } from './context/CropsContext';
+import { PricesProvider } from './context/PricesContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SupportSection from './components/SupportSection';
@@ -11,9 +13,8 @@ import Sell from './pages/Sell';
 import Buy from './pages/Buy';
 
 /**
- * App – root component.
+ * AppContent – Main application content
  * Manages the current view state and renders the right page.
- * All context providers are mounted here so every child can access them.
  */
 function AppContent() {
   // 'home' | 'prices' | 'sell' | 'buy'
@@ -27,10 +28,10 @@ function AppContent() {
 
   // Map view id → component
   const views = {
-    home:   <Home onNavigate={navigate} />,
+    home: <Home onNavigate={navigate} />,
     prices: <MarketPrices />,
-    sell:   <Sell onNavigate={navigate} />,
-    buy:    <Buy />,
+    sell: <Sell onNavigate={navigate} />,
+    buy: <Buy />,
   };
 
   return (
@@ -55,9 +56,13 @@ function AppContent() {
 export default function App() {
   return (
     <LangProvider>
-      <CropsProvider>
-        <AppContent />
-      </CropsProvider>
+      <AuthProvider>
+        <CropsProvider>
+          <PricesProvider>
+            <AppContent />
+          </PricesProvider>
+        </CropsProvider>
+      </AuthProvider>
     </LangProvider>
   );
 }
